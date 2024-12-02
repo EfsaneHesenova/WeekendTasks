@@ -1,0 +1,36 @@
+﻿@using MediplusMVC.Areas.Admin.ViewModels;
+@model AppointmentVM;
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Appointment.DoctorId" class="control-label">Select Doctor</label>
+        <select asp-for="Appointment.DoctorId" class="form-control">
+            <option value="">Select Doctor</option>
+            @foreach (var item in Model.Doctors)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Appointment.PatientId" class="control-label">Select Patient</label>
+        <select asp-for="Appointment.PatientId" class="form-control">
+            <option value="">Select Patient</option>
+            @foreach (var item in Model.Patients)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="Appointment.AppointmentDate"></label>
+        <input class="form-control" asp-for="Appointment.AppointmentDate">
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Appointment.IsActive"></label>
+        <input class="form-control" asp-for="Appointment.IsActive">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+

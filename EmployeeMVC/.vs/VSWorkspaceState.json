@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\EmployeeMVC",
+    "\\EmployeeMVC\\Areas",
+    "\\EmployeeMVC\\Areas\\Admin",
+    "\\EmployeeMVC\\Areas\\Admin\\Controllers",
+    "\\EmployeeMVC\\Areas\\Admin\\Views",
+    "\\EmployeeMVC\\Areas\\Admin\\Views\\Dashboard",
+    "\\EmployeeMVC\\Areas\\Admin\\Views\\Master",
+    "\\EmployeeMVC\\Areas\\Admin\\Views\\Order"
+  ],
+  "SelectedNode": "\\EmployeeMVC\\Views",
+  "PreviewInSolutionExplorer": false
+}

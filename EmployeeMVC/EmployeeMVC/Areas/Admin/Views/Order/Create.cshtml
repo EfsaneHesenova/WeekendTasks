@@ -1,0 +1,46 @@
+﻿@using EmployeeMVC.Areas.Admin.ViewModels;
+@model OrderVM;
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Order.ClientName"></label>
+        <input class="form-control" asp-for="Order.ClientName">
+    </div>
+    <div class="form-group">
+        <label asp-for="Order.ClientSurname"></label>
+        <input class="form-control" asp-for="Order.ClientSurname">
+    </div>
+    <div class="form-group">
+        <label asp-for="Order.ClientPhoneNumber"></label>
+        <input class="form-control" asp-for="Order.ClientPhoneNumber">
+    </div>
+    <div class="form-group">
+        <label asp-for="Order.ClientEmail"></label>
+        <input class="form-control" asp-for="Order.ClientEmail">
+    </div>
+    <div class="form-group">
+        <label asp-for="Order.Problem"></label>
+        <input class="form-control" asp-for="Order.Problem">
+    </div>
+    <div class="form-group">
+        <label asp-for="Order.ServiceId" class="control-label">Select Service</label>
+        <select asp-for="Order.ServiceId" class="form-control">
+            <option value="">Select Service</option>
+            @foreach (var item in Model.Services)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+        <div class="form-group">
+            <label asp-for="Order.MasterId" class="control-label">Select Master</label>
+            <select asp-for="Order.MasterId" class="form-control">
+                <option value="">Select Masters</option>
+                @foreach (var item in Model.Masters)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+
