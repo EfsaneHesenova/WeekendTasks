@@ -114,6 +114,74 @@ namespace MediplusMVC.Migrations
                     b.ToTable("Doctors");
                 });
 
+            modelBuilder.Entity("MediplusMVC.Models.Hospital", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hospitals");
+                });
+
+            modelBuilder.Entity("MediplusMVC.Models.HospitalDoctor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HospitalId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("HospitalId");
+
+                    b.ToTable("HospitalDoctors");
+                });
+
             modelBuilder.Entity("MediplusMVC.Models.Patient", b =>
                 {
                     b.Property<int>("Id")
@@ -256,9 +324,35 @@ namespace MediplusMVC.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("MediplusMVC.Models.HospitalDoctor", b =>
+                {
+                    b.HasOne("MediplusMVC.Models.Doctor", "Doctor")
+                        .WithMany("HospitalDoctors")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MediplusMVC.Models.Hospital", "Hospital")
+                        .WithMany("HospitalDoctors")
+                        .HasForeignKey("HospitalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Hospital");
+                });
+
             modelBuilder.Entity("MediplusMVC.Models.Doctor", b =>
                 {
                     b.Navigation("Appointments");
+
+                    b.Navigation("HospitalDoctors");
+                });
+
+            modelBuilder.Entity("MediplusMVC.Models.Hospital", b =>
+                {
+                    b.Navigation("HospitalDoctors");
                 });
 
             modelBuilder.Entity("MediplusMVC.Models.Patient", b =>

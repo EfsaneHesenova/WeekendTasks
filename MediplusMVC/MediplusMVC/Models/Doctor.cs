@@ -12,6 +12,7 @@ namespace MediplusMVC.Models
         public string? Username { get; set; }
         public ICollection<Appointment>? Appointments { get; set; }
         public bool IsActive {  get; set; } = true;
+        public ICollection<HospitalDoctor>? HospitalDoctors { get; set; }
 
     }
 }

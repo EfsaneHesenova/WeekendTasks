@@ -1,0 +1,48 @@
+﻿@using MediplusMVC.Models;
+@model IEnumerable<Hospital>;
+<a type="button" class="btn btn-success mb-3" asp-area="Admin" asp-controller="Hospital" asp-action="Create">Create Slider</a>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+
+
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Doctor Count</th>
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    @foreach (Hospital item in @Model)
+                    {
+                        <tr>
+                            <th>@item.Id</th>
+                            <th>@item.Title</th>
+                            <th>@item.Description</th>
+                            <th>@item.HospitalDoctors.Count</th>
+                            <td><a class="btn btn-primary" asp-controller="Hospital" asp-action="Update" asp-route-id="@item.Id" asp-area="Admin">Update</a></td>
+                            <td><a class="btn btn-danger" asp-controller="Hospital" asp-action="Delete" asp-route-id="@item.Id" asp-area="Admin">Delete</a></td>
+                            <td><a class="btn btn-danger" asp-controller="Hospital" asp-action="Detail" asp-route-id="@item.Id" asp-area="Admin">Detail</a></td>
+
+                        </tr>
+                    }
+
+                </tfoot>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- /.container-fluid -->

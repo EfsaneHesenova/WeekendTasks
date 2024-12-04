@@ -1,6 +1,7 @@
 ﻿using MediplusMVC.Areas.Admin.ViewModels;
 using MediplusMVC.DAL;
 using MediplusMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 namespace MediplusMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class AppointmentController : Controller
     {
         private readonly AppDbContext _context;
