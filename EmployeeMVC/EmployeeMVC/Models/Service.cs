@@ -10,12 +10,10 @@ namespace EmployeeMVC.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; } = true;
-        //[AllowNull]
-        [Required]
-        public string? MainImageUrl { get; set; }
 
         [NotMapped]
-        public IFormFile Image { get; set; }
+        public List<IFormFile> Images { get; set; }
+        public List<ServicePhoto>? ServicePhotos { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<Master>? Masters { get; set; }
     }

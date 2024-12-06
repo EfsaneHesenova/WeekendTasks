@@ -107,15 +107,19 @@ namespace EmployeeMVC.Controllers
         public async Task<IActionResult> CreateAdmin()
         {
             AppUser appUser = new AppUser();
-            appUser.UserName = "EfsaneAdmin";
-            appUser.Email = "Efsan123@gmail.com";
-            var result = await _userManager.CreateAsync(appUser, "Efsane123!@#");
+			appUser.FirstName = "Mehemmed";
+			appUser.LastName = "Xelilzade";
+			appUser.UserName = "mehisAdmin";
+			appUser.Email = "mehemmed132@gmail.com";
+			var result = await _userManager.CreateAsync(appUser, "Efsane123!@#");
+            _context.SaveChanges();
             if (!result.Succeeded)
             {
                 return Json(result);
             }
             await _userManager.AddToRoleAsync(appUser, RoleEnums.Admin.ToString());
-            return Json("Succes");
+			_context.SaveChanges();
+			return Json("Success");
         }
     }
 }

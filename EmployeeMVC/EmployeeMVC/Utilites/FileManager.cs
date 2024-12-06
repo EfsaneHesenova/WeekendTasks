@@ -18,22 +18,20 @@ namespace EmployeeMVC.Utilites
             }
             return true;
         }
-        public static string Upload(this IFormFile formFile, string envPath, string folder)
-        {
-            string path = envPath + folder;
-            string fileName = Path.GetFileNameWithoutExtension(formFile.FileName);
-            if (fileName.Length > 50 )
-            {
-                fileName = fileName.Substring(0, 49) + Path.GetExtension(formFile.FileName);
-            }
+		public static string Upload(this IFormFile formFile, string envPath, string folder)
+		{
+			string path = envPath + folder;
+			string fileName = Path.GetFileNameWithoutExtension(formFile.FileName);
+			fileName = Guid.NewGuid().ToString() + fileName + Path.GetExtension(formFile.FileName);
+			using (FileStream fileStream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+			{
+				formFile.CopyTo(fileStream);
+			}
 
-            fileName= Guid.NewGuid().ToString() + fileName;
-            using (FileStream fileStream = new FileStream(path + fileName, FileMode.Create))
-            {
-              formFile.CopyTo(fileStream);
-            }
-        
-            return fileName;
-        }
-    }
+			return fileName;
+		}
+
+
+
+	}
 }

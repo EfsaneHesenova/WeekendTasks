@@ -13,6 +13,8 @@ namespace EmployeeMVC.DAL
         public DbSet<Master> Masters { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<ServicePhoto> ServicePhotos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

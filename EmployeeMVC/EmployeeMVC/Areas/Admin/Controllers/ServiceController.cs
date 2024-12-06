@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EmployeeMVC.Utilites;
-
+using EmployeeMVC.Migrations;
 namespace EmployeeMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -28,25 +28,34 @@ namespace EmployeeMVC.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Service> services = await _context.Services.ToListAsync();
+            List<Service> services = await _context.Services.Include(u => u.ServicePhotos).ToListAsync();
             return View(services);
         }
-
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            
-            Service? service = _context.Services.Find(id);
+            Service? service = await _context.Services.Include(u => u.ServicePhotos).FirstOrDefaultAsync(u => u.Id == id);
+            return View(service);
+        }
+        public async Task<IActionResult> Delete(int id)
+        {
+            Service? service = await _context.Services
+                .Include(u => u.ServicePhotos)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
             if (service == null)
             {
                 return NotFound();
             }
-            else
-            {
-                _context.Services.Remove(service);
-                _context.SaveChanges();
-            }
+
+            _context.ServicePhotos.RemoveRange(service.ServicePhotos);
+
+            _context.Services.Remove(service);
+
+            await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
+
 
         public ActionResult Create()
         {
@@ -55,46 +64,52 @@ namespace EmployeeMVC.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Service service)
         {
-            
 
-            if (!ModelState.IsValid)
-            {
-                return View(service);
-            }
-
-            if (service.Image.CheckType())
-            {
-                ModelState.AddModelError("Image", "Only image accepted");
-                return View(service);
-            }
-
-            if (service.Image.CheckSize(5))
-            {
-                ModelState.AddModelError("Image", "Max 5 mb image accepted");
-                return View(service);
-            }
-            string UploadedImageUrl = service.Image.Upload(_webHostEnvironment.WebRootPath + @"\download\ServiceImages\");
-            service.MainImageUrl = UploadedImageUrl;
             _context.Services.Add(service);
             _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
 
-        public IActionResult Update(int? Id)
+            foreach (var Image in service.Images)
+            {
+				if (!Image.CheckType())
+				{
+					ModelState.AddModelError("Image", "Only image accepted");
+					return View(service);
+				}
+
+				if (!Image.CheckSize(5))
+				{
+					ModelState.AddModelError("Image", "Max 5 mb image accepted");
+					return View(service);
+				}
+				string UploadedImageUrl = Image.Upload(_webHostEnvironment.WebRootPath, Path.Combine(@"\", "download", "ServiceImages"));
+				
+				ServicePhoto servicePhoto = new ServicePhoto()
+                {
+                    ImageUrl = UploadedImageUrl,
+                    ServiceId = service.Id
+                };
+                _context.ServicePhotos.Add(servicePhoto);
+				_context.SaveChanges();
+			}
+			return RedirectToAction(nameof(Index));
+
+		}
+
+        public async Task<IActionResult> Update(int? id)
         {
-            Service? service = _context.Services.Find(Id);
+            Service? service = await _context.Services.Include(u => u.ServicePhotos).FirstOrDefaultAsync(u => u.Id == id);
             if (service == null)
             {
                 return NotFound();
             }
-            return View(nameof(Create), service);
+            return View(service);
         }
 
 
         [HttpPost]
-        public IActionResult Update(Service service)
+        public async Task<IActionResult> Update(Service service)
         {
-            Service? updatedService = _context.Services.AsNoTracking().FirstOrDefault(service => service.Id == service.Id);
+            Service? updatedService = await _context.Services.Include(u => u.ServicePhotos).FirstOrDefaultAsync(u => u.Id == service.Id);
             if (updatedService == null)
             {
                 return BadRequest();
@@ -103,5 +118,21 @@ namespace EmployeeMVC.Areas.Admin.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> DeletePhotoById(int id)
+        {
+            ServicePhoto? servicePhoto = await _context.ServicePhotos.FindAsync(id);
+
+            if (servicePhoto == null)
+            {
+                return NotFound();
+            }
+
+            _context.ServicePhotos.Remove(servicePhoto);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Update), new { id = servicePhoto.ServiceId });
+        }
+
     }
 }
