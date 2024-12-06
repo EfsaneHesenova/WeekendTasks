@@ -19,6 +19,7 @@
                         <th>Title</th>
                         <th>Description</th>
                         <th>IsActive</th>
+                        <th scope="col">Image</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -29,6 +30,7 @@
                             <th>@item.Title</th>
                             <th>@item.Description</th>
                             <td>@item.IsActive</td>>
+                            <td><img src="~/Upload/ServiceImages/@item.MainImageUrl" width="50" /></td>
                             <td><a class="btn btn-primary" asp-controller="Service" asp-action="Update" asp-route-id="@item.Id" asp-area="Admin">Update</a></td>
                             <td><a class="btn btn-danger" asp-controller="Service" asp-action="Delete" asp-route-id="@item.Id" asp-area="Admin">Delete</a></td>
                         </tr>

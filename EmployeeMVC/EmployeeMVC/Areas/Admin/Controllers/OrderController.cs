@@ -1,6 +1,7 @@
 ﻿using EmployeeMVC.Areas.Admin.ViewModels;
 using EmployeeMVC.DAL;
 using EmployeeMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EmployeeMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin, Manager")]
     public class OrderController : Controller
     {
         private readonly AppDbContext _context;

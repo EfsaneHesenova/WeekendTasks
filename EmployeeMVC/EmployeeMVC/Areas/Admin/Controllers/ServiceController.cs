@@ -1,20 +1,29 @@
 ﻿using EmployeeMVC.Areas.Admin.ViewModels;
 using EmployeeMVC.DAL;
 using EmployeeMVC.Models;
+using EmployeeMVC.Utilites;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using EmployeeMVC.Utilites;
 
 namespace EmployeeMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin, Manager")]
     public class ServiceController : Controller
     {
         private readonly AppDbContext _context;
+        IWebHostEnvironment _webHostEnvironment;
 
-        public ServiceController(AppDbContext context)
+
+        public ServiceController(AppDbContext context, IWebHostEnvironment webHost)
         {
             _context = context;
+            _webHostEnvironment = webHost;
+           
         }
 
         public async Task<IActionResult> Index()
@@ -25,6 +34,7 @@ namespace EmployeeMVC.Areas.Admin.Controllers
 
         public IActionResult Delete(int id)
         {
+            
             Service? service = _context.Services.Find(id);
             if (service == null)
             {
@@ -45,14 +55,31 @@ namespace EmployeeMVC.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Service service)
         {
+            
+
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return View(service);
             }
+
+            if (service.Image.CheckType())
+            {
+                ModelState.AddModelError("Image", "Only image accepted");
+                return View(service);
+            }
+
+            if (service.Image.CheckSize(5))
+            {
+                ModelState.AddModelError("Image", "Max 5 mb image accepted");
+                return View(service);
+            }
+            string UploadedImageUrl = service.Image.Upload(_webHostEnvironment.WebRootPath + @"\download\ServiceImages\");
+            service.MainImageUrl = UploadedImageUrl;
             _context.Services.Add(service);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+
         public IActionResult Update(int? Id)
         {
             Service? service = _context.Services.Find(Id);
